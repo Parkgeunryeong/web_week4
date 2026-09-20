@@ -1,0 +1,11 @@
+/* 여기에 개인 커스텀 스타일을 추가하세요 */
+
+.reveal h1, .reveal h2, .reveal h3 {
+  text-transform: none;
+}
+
+.reveal .slides section img {
+  border: none;
+  box-shadow: none;
+  border-radius: 8px;
+}

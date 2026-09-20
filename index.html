@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>내 발표자료</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css" id="theme-link">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+  <link rel="stylesheet" href="css/custom.css">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- 표지 -->
+      <section>
+        <h1>발표 제목</h1>
+        <p>부제목 또는 발표자 이름</p>
+        <p><small>2026-09-21</small></p>
+      </section>
+
+      <!-- 목차 -->
+      <section>
+        <h2>목차</h2>
+        <ul>
+          <li>소개</li>
+          <li>본론</li>
+          <li>결론</li>
+        </ul>
+      </section>
+
+      <!-- 세로 슬라이드 그룹 예시 -->
+      <section>
+        <section>
+          <h2>섹션 1: 소개</h2>
+          <p>아래 방향키(↓)로 하위 슬라이드로 이동할 수 있습니다.</p>
+        </section>
+        <section>
+          <h3>세부 내용 1-1</h3>
+          <p class="fragment">클릭하면 하나씩</p>
+          <p class="fragment">순서대로</p>
+          <p class="fragment">나타납니다.</p>
+        </section>
+      </section>
+
+      <!-- 코드 하이라이팅 예시 -->
+      <section>
+        <h2>코드 예시</h2>
+        <pre><code class="language-python" data-trim data-line-numbers>
+def hello():
+    print("Hello, Reveal.js!")
+        </code></pre>
+      </section>
+
+      <!-- 이미지 예시 -->
+      <section>
+        <h2>이미지</h2>
+        <img src="https://via.placeholder.com/600x300" alt="placeholder">
+      </section>
+
+      <!-- 발표자 노트 예시 -->
+      <section>
+        <h2>마무리</h2>
+        <p>질문 있으신가요?</p>
+        <aside class="notes">
+          여기는 발표자 노트입니다. 발표 중 'S' 키를 누르면 발표자 화면(Speaker View)에서만 보입니다.
+        </aside>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/markdown/markdown.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,           // 슬라이드별 URL 지원 (예: #/2)
+      controls: true,
+      progress: true,
+      center: true,
+      transition: 'slide',  // none/fade/slide/convex/concave/zoom
+      plugins: [ RevealNotes, RevealMarkdown, RevealHighlight ]
+    });
+  </script>
+</body>
+</html>
