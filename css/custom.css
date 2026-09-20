@@ -9,3 +9,49 @@
   box-shadow: none;
   border-radius: 8px;
 }
+
+/* 요구사항 표 */
+.reveal table.req-table {
+  width: 100%;
+  font-size: 0.55em;
+  border-collapse: collapse;
+}
+
+.reveal table.req-table th,
+.reveal table.req-table td {
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 0.4em 0.6em;
+  text-align: left;
+  vertical-align: top;
+}
+
+.reveal table.req-table th {
+  background: rgba(255, 255, 255, 0.08);
+  white-space: nowrap;
+}
+
+/* 파이프라인 다이어그램 */
+.pipeline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+  margin-top: 1.5em;
+}
+
+.pipe-step {
+  background: rgba(66, 175, 255, 0.15);
+  border: 2px solid #42affe;
+  border-radius: 10px;
+  padding: 0.8em 1em;
+  font-size: 0.5em;
+  line-height: 1.3;
+  min-width: 5.5em;
+  text-align: center;
+}
+
+.pipe-arrow {
+  font-size: 0.6em;
+  opacity: 0.8;
+}

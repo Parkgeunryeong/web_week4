@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>내 발표자료</title>
+  <title>LLM 기반 DAST 요구사항 정의서</title>
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css" id="theme-link">
@@ -16,57 +16,195 @@
 
       <!-- 표지 -->
       <section>
-        <h1>발표 제목</h1>
-        <p>부제목 또는 발표자 이름</p>
-        <p><small>2026-09-21</small></p>
+        <h1>LLM 기반 DAST</h1>
+        <p>SQL Injection · XSS 자동 진단 하네스 — 요구사항 정의서</p>
+        <p><small>2026. 9.</small></p>
       </section>
 
       <!-- 목차 -->
       <section>
         <h2>목차</h2>
+        <ol>
+          <li>프로젝트 개요</li>
+          <li>참고 RFP 대비 범위 재정의</li>
+          <li>파이프라인 아키텍처</li>
+          <li>기능 요구사항 (FR)</li>
+          <li>비기능 요구사항 (NFR)</li>
+          <li>제외 범위 (Out of Scope)</li>
+        </ol>
+      </section>
+
+      <!-- 1. 프로젝트 개요 -->
+      <section>
+        <h2>1. 프로젝트 개요</h2>
         <ul>
-          <li>소개</li>
-          <li>본론</li>
-          <li>결론</li>
+          <li><strong>목적</strong>: 웹 애플리케이션의 SQL Injection·XSS 취약점을
+            LLM 판단 기반 파이프라인으로 자동 진단</li>
+          <li><strong>배경</strong>: 공공기관의 "AI 기반 취약점 점검 소프트웨어 도입"
+            제안요청서 컨셉을 참고하되, 개인 학습·구현 프로젝트 수준으로 범위를 축소·재정의</li>
+          <li><strong>핵심 아이디어</strong>: 스캐너를 무엇을 쓸지, 결과가 진짜 취약점인지를
+            사람 대신 LLM이 판단하게 만드는 것</li>
         </ul>
-      </section>
-
-      <!-- 세로 슬라이드 그룹 예시 -->
-      <section>
-        <section>
-          <h2>섹션 1: 소개</h2>
-          <p>아래 방향키(↓)로 하위 슬라이드로 이동할 수 있습니다.</p>
-        </section>
-        <section>
-          <h3>세부 내용 1-1</h3>
-          <p class="fragment">클릭하면 하나씩</p>
-          <p class="fragment">순서대로</p>
-          <p class="fragment">나타납니다.</p>
-        </section>
-      </section>
-
-      <!-- 코드 하이라이팅 예시 -->
-      <section>
-        <h2>코드 예시</h2>
-        <pre><code class="language-python" data-trim data-line-numbers>
-def hello():
-    print("Hello, Reveal.js!")
-        </code></pre>
-      </section>
-
-      <!-- 이미지 예시 -->
-      <section>
-        <h2>이미지</h2>
-        <img src="https://via.placeholder.com/600x300" alt="placeholder">
-      </section>
-
-      <!-- 발표자 노트 예시 -->
-      <section>
-        <h2>마무리</h2>
-        <p>질문 있으신가요?</p>
         <aside class="notes">
-          여기는 발표자 노트입니다. 발표 중 'S' 키를 누르면 발표자 화면(Speaker View)에서만 보입니다.
+          원본 RFP는 임의의 웹 취약점 전반 + 자율 공격 시나리오 생성까지 포함하지만,
+          여기서는 SQLi/XSS 탐지·오탐 판별로 한정한다는 점을 강조.
         </aside>
+      </section>
+
+      <!-- 2. 범위 재정의 -->
+      <section>
+        <h2>2. 참고 RFP 대비 범위 재정의</h2>
+        <table class="req-table">
+          <thead>
+            <tr><th>구분</th><th>참고 RFP (원본 컨셉)</th><th>본 프로젝트 범위</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>대상 취약점</td>
+              <td>제한 없음 (전체 웹 취약점)</td>
+              <td>SQL Injection, XSS 2종 한정</td>
+            </tr>
+            <tr>
+              <td>정보 수집</td>
+              <td>자산·포트·서비스·기술스택 자동 식별</td>
+              <td>대상 URL 크롤링 (페이지·입력 파라미터 수집)</td>
+            </tr>
+            <tr>
+              <td>취약점 탐색</td>
+              <td>AI 추론 기반 공격표면 분석 + 공격 시나리오 자동 생성</td>
+              <td>LLM이 수집 정보를 보고 적용할 스캔 도구/페이로드 유형 선택</td>
+            </tr>
+            <tr>
+              <td>검증</td>
+              <td>Exploit 자동 생성 및 연쇄 침투</td>
+              <td>자동화 스캐너 실행 결과를 LLM이 재해석·재실행하여 확정</td>
+            </tr>
+            <tr>
+              <td>산출물</td>
+              <td>위험도·판단근거·조치방법 포함 상세 보고서</td>
+              <td>취약점 위치·유형·판단근거·PoC 중심의 경량 리포트</td>
+            </tr>
+            <tr>
+              <td>스케줄링 / 위협인텔 / 이행점검</td>
+              <td>포함</td>
+              <td>제외 (1회성 진단 파이프라인)</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- 3. 파이프라인 아키텍처 -->
+      <section>
+        <h2>3. 파이프라인 아키텍처</h2>
+        <div class="pipeline">
+          <div class="pipe-step fragment">① 크롤링</div>
+          <div class="pipe-arrow fragment">→</div>
+          <div class="pipe-step fragment">② LLM 도구 선택</div>
+          <div class="pipe-arrow fragment">→</div>
+          <div class="pipe-step fragment">③ 자동화 스캔<br><small>(SQLi / XSS)</small></div>
+          <div class="pipe-arrow fragment">→</div>
+          <div class="pipe-step fragment">④ LLM 판단<br><small>(확정 · 재실행)</small></div>
+          <div class="pipe-arrow fragment">→</div>
+          <div class="pipe-step fragment">⑤ 리포트 생성</div>
+        </div>
+        <p style="margin-top:2rem;"><small>각 단계의 산출물은 다음 단계 입력으로 전달되는 순차 파이프라인</small></p>
+      </section>
+
+      <!-- 4. 기능 요구사항 그룹 -->
+      <section>
+        <section>
+          <h2>4. 기능 요구사항 (FR)</h2>
+          <p>파이프라인 5단계에 대응하는 5개 요구사항</p>
+          <p><small>아래 방향키(↓)로 FR-01 ~ FR-05 확인</small></p>
+        </section>
+
+        <section>
+          <h3>FR-01. 크롤링 (정보 수집)</h3>
+          <table class="req-table">
+            <tr><th>정의</th><td>진단 대상 웹사이트를 크롤링하여 페이지 및 입력 지점 목록을 자동 수집</td></tr>
+            <tr><th rowspan="4">세부 내용</th><td>대상 도메인 내 페이지 자동 탐색 (링크 추적)</td></tr>
+            <tr><td>GET/POST 파라미터, 폼 필드, 쿠키 등 입력 지점 목록화</td></tr>
+            <tr><td>수집 결과를 구조화 데이터(JSON 등)로 저장, 다음 단계에 전달</td></tr>
+            <tr><td>인증 필요 페이지는 사전 설정된 세션으로만 접근 (허용 범위 내)</td></tr>
+          </table>
+        </section>
+
+        <section>
+          <h3>FR-02. LLM 기반 진단 도구 선택</h3>
+          <table class="req-table">
+            <tr><th>정의</th><td>수집된 입력 지점 특성을 LLM이 분석하여 SQLi/XSS 스캔 여부·방식을 판단·선택</td></tr>
+            <tr><th rowspan="3">세부 내용</th><td>파라미터 유형·응답 특성 등을 근거로 SQLi/XSS 각각의 스캔 필요 여부 판단</td></tr>
+            <tr><td>판단 근거를 로그로 기록 (사실과 추측 구분)</td></tr>
+            <tr><td>선택 결과에 따라 다음 단계의 페이로드 세트·강도 결정</td></tr>
+          </table>
+        </section>
+
+        <section>
+          <h3>FR-03. 자동화 도구 실행 (SQLi/XSS 스캔)</h3>
+          <table class="req-table">
+            <tr><th>정의</th><td>선택된 스캔 로직에 따라 SQLi/XSS 탐지용 자동화 도구를 실행, 원시 결과 수집</td></tr>
+            <tr><th rowspan="4">세부 내용</th><td>SQLi: 에러기반/블라인드(시간지연) 등 페이로드 주입 및 응답 비교</td></tr>
+            <tr><td>XSS: reflected/stored 여부 확인을 위한 페이로드 주입 및 반사 여부 확인</td></tr>
+            <tr><td>요청 속도 제한 등 운영 영향 최소화 옵션 적용</td></tr>
+            <tr><td>모든 요청·응답 원문 로깅</td></tr>
+          </table>
+        </section>
+
+        <section>
+          <h3>FR-04. LLM 판단 (취약점 확정 및 재실행)</h3>
+          <table class="req-table">
+            <tr><th>정의</th><td>자동화 도구의 원시 결과를 LLM이 분석해 오탐 여부 판단, 필요 시 재실행</td></tr>
+            <tr><th rowspan="3">세부 내용</th><td>응답 내 취약점 신호(에러 메시지, 반사된 페이로드 등) 해석</td></tr>
+            <tr><td>오탐 가능성 있는 경우 페이로드를 조정한 재현 요청을 자동 생성·재실행</td></tr>
+            <tr><td>확정(Confirmed) / 미확인(Unconfirmed) 상태와 판단 근거를 함께 기록</td></tr>
+          </table>
+        </section>
+
+        <section>
+          <h3>FR-05. 리포트 생성</h3>
+          <table class="req-table">
+            <tr><th>정의</th><td>확정된 취약점을 사람이 읽을 수 있는 보고서 형태로 산출</td></tr>
+            <tr><th rowspan="3">세부 내용</th><td>취약점 별 위치(URL/파라미터), 유형, 판단 근거, 재현 PoC(요청·응답) 명시</td></tr>
+            <tr><td>마크다운 또는 HTML 형태로 보고서 자동 생성</td></tr>
+            <tr><td>원본 요청·응답 로그를 첨부하여 재현성 확보</td></tr>
+          </table>
+        </section>
+      </section>
+
+      <!-- 5. 비기능 요구사항 -->
+      <section>
+        <h2>5. 비기능 요구사항 (NFR)</h2>
+        <table class="req-table">
+          <tr><th>NFR-01</th><td>비파괴적 검증 원칙 — 데이터 변조·삭제, 서비스 중단 유발 공격 금지</td></tr>
+          <tr><th>NFR-02</th><td>요청 속도 제한 (최소 200ms 간격, 동시 연결 1~2개 이내)</td></tr>
+          <tr><th>NFR-03</th><td>재현성 — 모든 요청·응답 원본을 로그로 저장</td></tr>
+          <tr><th>NFR-04</th><td>사실/추측 구분 — LLM 판단 결과에 확정/추정 태그 부여</td></tr>
+          <tr><th>NFR-05</th><td>범위 제한 — 사전 승인된 대상 도메인 외 요청 금지</td></tr>
+        </table>
+      </section>
+
+      <!-- 6. 제외 범위 -->
+      <section>
+        <h2>6. 제외 범위 (Out of Scope)</h2>
+        <ul>
+          <li>완전 자율 공격 시나리오 생성·체이닝 및 자동 Exploit 생성 (다단계 침투)</li>
+          <li>SQLi/XSS 외 취약점 유형 (CSRF, 파일 업로드, 인증/인가 취약점 등)</li>
+          <li>반복 진단 스케줄링 (주기적 자동 실행)</li>
+          <li>최신 위협정보(CVE 등) 자동 업데이트 연동</li>
+          <li>조치 이행점검(재점검) 기능</li>
+          <li>다중 사용자 접근제어 및 결과 재학습 제한 정책</li>
+          <li>입찰·계약·보안특약 등 사업관리적 요소 전체</li>
+        </ul>
+        <aside class="notes">
+          단일 사용자 개인 프로젝트이므로 다중 사용자 접근제어, 계약/입찰 관련 요구사항은 해당 없음.
+        </aside>
+      </section>
+
+      <!-- 마무리 -->
+      <section>
+        <h2>정리</h2>
+        <p>크롤링 → LLM 도구 선택 → 자동화 스캔 → LLM 판단 → 리포트</p>
+        <p><small>SQLi·XSS 2종에 한정된 최소 기능(MVP) 파이프라인으로 우선 구현</small></p>
       </section>
 
     </div>
@@ -82,6 +220,7 @@ def hello():
       controls: true,
       progress: true,
       center: true,
+      width: 1100,
       transition: 'slide',  // none/fade/slide/convex/concave/zoom
       plugins: [ RevealNotes, RevealMarkdown, RevealHighlight ]
     });
