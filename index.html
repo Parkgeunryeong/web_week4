@@ -25,35 +25,15 @@
       <section>
         <h2>목차</h2>
         <ol>
-          <li>프로젝트 개요</li>
           <li>참고 RFP 대비 범위 재정의</li>
-          <li>파이프라인 아키텍처</li>
           <li>기능 요구사항 (FR)</li>
           <li>비기능 요구사항 (NFR)</li>
-          <li>제외 범위 (Out of Scope)</li>
         </ol>
       </section>
 
-      <!-- 1. 프로젝트 개요 -->
+      <!-- 1. 범위 재정의 -->
       <section>
-        <h2>1. 프로젝트 개요</h2>
-        <ul>
-          <li><strong>목적</strong>: 웹 애플리케이션의 SQL Injection·XSS 취약점을
-            LLM 판단 기반 파이프라인으로 자동 진단</li>
-          <li><strong>배경</strong>: 공공기관의 "AI 기반 취약점 점검 소프트웨어 도입"
-            제안요청서 컨셉을 참고하되, 개인 학습·구현 프로젝트 수준으로 범위를 축소·재정의</li>
-          <li><strong>핵심 아이디어</strong>: 스캐너를 무엇을 쓸지, 결과가 진짜 취약점인지를
-            사람 대신 LLM이 판단하게 만드는 것</li>
-        </ul>
-        <aside class="notes">
-          원본 RFP는 임의의 웹 취약점 전반 + 자율 공격 시나리오 생성까지 포함하지만,
-          여기서는 SQLi/XSS 탐지·오탐 판별로 한정한다는 점을 강조.
-        </aside>
-      </section>
-
-      <!-- 2. 범위 재정의 -->
-      <section>
-        <h2>2. 참고 RFP 대비 범위 재정의</h2>
+        <h2>1. 참고 RFP 대비 범위 재정의</h2>
         <table class="req-table">
           <thead>
             <tr><th>구분</th><th>참고 RFP (원본 컨셉)</th><th>본 프로젝트 범위</th></tr>
@@ -93,27 +73,10 @@
         </table>
       </section>
 
-      <!-- 3. 파이프라인 아키텍처 -->
-      <section>
-        <h2>3. 파이프라인 아키텍처</h2>
-        <div class="pipeline">
-          <div class="pipe-step fragment">① 크롤링</div>
-          <div class="pipe-arrow fragment">→</div>
-          <div class="pipe-step fragment">② LLM 도구 선택</div>
-          <div class="pipe-arrow fragment">→</div>
-          <div class="pipe-step fragment">③ 자동화 스캔<br><small>(SQLi / XSS)</small></div>
-          <div class="pipe-arrow fragment">→</div>
-          <div class="pipe-step fragment">④ LLM 판단<br><small>(확정 · 재실행)</small></div>
-          <div class="pipe-arrow fragment">→</div>
-          <div class="pipe-step fragment">⑤ 리포트 생성</div>
-        </div>
-        <p style="margin-top:2rem;"><small>각 단계의 산출물은 다음 단계 입력으로 전달되는 순차 파이프라인</small></p>
-      </section>
-
-      <!-- 4. 기능 요구사항 그룹 -->
+      <!-- 2. 기능 요구사항 그룹 -->
       <section>
         <section>
-          <h2>4. 기능 요구사항 (FR)</h2>
+          <h2>2. 기능 요구사항 (FR)</h2>
           <p>파이프라인 5단계에 대응하는 5개 요구사항</p>
           <p><small>아래 방향키(↓)로 FR-01 ~ FR-05 확인</small></p>
         </section>
@@ -171,32 +134,15 @@
         </section>
       </section>
 
-      <!-- 5. 비기능 요구사항 -->
+      <!-- 3. 비기능 요구사항 -->
       <section>
-        <h2>5. 비기능 요구사항 (NFR)</h2>
+        <h2>3. 비기능 요구사항 (NFR)</h2>
         <table class="req-table">
           <tr><th>NFR-01</th><td>비파괴적 검증 원칙 — 데이터 변조·삭제, 서비스 중단 유발 공격 금지</td></tr>
           <tr><th>NFR-02</th><td>요청 속도 제한 (최소 200ms 간격, 동시 연결 1~2개 이내)</td></tr>
           <tr><th>NFR-03</th><td>재현성 — 모든 요청·응답 원본을 로그로 저장</td></tr>
           <tr><th>NFR-04</th><td>범위 제한 — 사전 승인된 대상 도메인 외 요청 금지</td></tr>
         </table>
-      </section>
-
-      <!-- 6. 제외 범위 -->
-      <section>
-        <h2>6. 제외 범위 (Out of Scope)</h2>
-        <ul>
-          <li>완전 자율 공격 시나리오 생성·체이닝 및 자동 Exploit 생성 (다단계 침투)</li>
-          <li>SQLi/XSS 외 취약점 유형 (CSRF, 파일 업로드, 인증/인가 취약점 등)</li>
-          <li>반복 진단 스케줄링 (주기적 자동 실행)</li>
-          <li>최신 위협정보(CVE 등) 자동 업데이트 연동</li>
-          <li>조치 이행점검(재점검) 기능</li>
-          <li>다중 사용자 접근제어 및 결과 재학습 제한 정책</li>
-          <li>입찰·계약·보안특약 등 사업관리적 요소 전체</li>
-        </ul>
-        <aside class="notes">
-          단일 사용자 개인 프로젝트이므로 다중 사용자 접근제어, 계약/입찰 관련 요구사항은 해당 없음.
-        </aside>
       </section>
 
       <!-- 마무리 -->
