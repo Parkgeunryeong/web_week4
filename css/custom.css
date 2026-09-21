@@ -19,14 +19,14 @@
 
 .reveal table.req-table th,
 .reveal table.req-table td {
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(0, 0, 0, 0.25);
   padding: 0.4em 0.6em;
   text-align: left;
   vertical-align: top;
 }
 
 .reveal table.req-table th {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.06);
   white-space: nowrap;
 }
 
