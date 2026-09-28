@@ -55,3 +55,23 @@
   font-size: 0.6em;
   opacity: 0.8;
 }
+
+/* 진행사항: 이미지 상단 + 텍스트 우하단 배치 */
+.progress-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.progress-layout img {
+  max-height: 55vh;
+  margin-bottom: 0.6em;
+}
+
+.progress-layout .progress-notes {
+  align-self: flex-end;
+  width: 58%;
+  text-align: left;
+  font-size: 0.42em;
+  line-height: 1.4;
+}
