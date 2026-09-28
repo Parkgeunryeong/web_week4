@@ -56,21 +56,21 @@
   opacity: 0.8;
 }
 
-/* 진행사항: 이미지 상단 + 텍스트 우하단 배치 */
+/* 진행사항: 이미지 좌측 + 텍스트 우측 배치 */
 .progress-layout {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
+  gap: 1.5em;
 }
 
 .progress-layout img {
-  max-height: 55vh;
-  margin-bottom: 0.6em;
+  max-height: 60vh;
+  max-width: 50%;
 }
 
 .progress-layout .progress-notes {
-  align-self: flex-end;
-  width: 58%;
+  flex: 1;
   text-align: left;
   font-size: 0.42em;
   line-height: 1.4;
