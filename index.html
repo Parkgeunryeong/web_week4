@@ -17,7 +17,7 @@
       <!-- 표지 -->
       <section>
         <h1>LLM 기반 DAST</h1>
-        <p>SQL Injection · XSS 자동 진단 하네스 — 요구사항 정의서</p>
+        <p>SQLI, XSS 자동 진단 하네스</p>
         <img src="images/cover.png" alt="cover" style="max-height:38vh; margin:1em auto;">
         <p><small>202647009 박근령</small></p>
       </section>
@@ -26,162 +26,28 @@
       <section>
         <h2>목차</h2>
         <ol>
-          <li>참고 RFP 대비 범위 재정의</li>
-          <li>기능 요구사항 (FR)</li>
-          <li>비기능 요구사항 (NFR)</li>
+          <li>진행사항</li>
+          <li>차주계획</li>
         </ol>
       </section>
 
-      <!-- 1. 범위 재정의 -->
+      <!-- 진행사항 -->
       <section>
-        <h2>1. 참고 RFP 대비 범위 재정의</h2>
-        <table class="req-table">
-          <thead>
-            <tr><th>구분</th><th>참고 RFP (원본 컨셉)</th><th>본 프로젝트 범위</th></tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>대상 취약점</td>
-              <td>제한 없음 (전체 웹 취약점)</td>
-              <td>SQL Injection, XSS 2종 한정</td>
-            </tr>
-            <tr>
-              <td>정보 수집</td>
-              <td>자산·포트·서비스·기술스택 자동 식별</td>
-              <td>대상 URL 크롤링 (페이지·입력 파라미터 수집)</td>
-            </tr>
-            <tr>
-              <td>취약점 탐색</td>
-              <td>AI 추론 기반 공격표면 분석 + 공격 시나리오 자동 생성</td>
-              <td>LLM이 수집 정보를 보고 적용할 스캔 도구/페이로드 유형 선택</td>
-            </tr>
-            <tr>
-              <td>검증</td>
-              <td>Exploit 자동 생성 및 연쇄 침투</td>
-              <td>자동화 스캐너 실행 결과를 LLM이 재해석·재실행하여 확정</td>
-            </tr>
-            <tr>
-              <td>산출물</td>
-              <td>위험도·판단근거·조치방법 포함 상세 보고서</td>
-              <td>취약점 위치·유형·판단근거·PoC 중심의 경량 리포트</td>
-            </tr>
-            <tr>
-              <td>스케줄링 / 위협인텔 / 이행점검</td>
-              <td>포함</td>
-              <td>제외 (1회성 진단 파이프라인)</td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
-
-      <!-- 2. 기능 요구사항 그룹 -->
-      <section>
-        <section>
-          <h2>2. 기능 요구사항 (FR)</h2>
-          <p>파이프라인 5단계에 대응하는 5개 요구사항</p>
-        </section>
-
-        <section>
-          <h3>FR-01. 크롤링 (정보 수집)</h3>
-          <table class="req-table">
-            <tr><th>정의</th><td>진단 대상 웹사이트를 크롤링하여 페이지 및 입력 지점 목록을 자동 수집</td></tr>
-            <tr><th rowspan="4">세부 내용</th><td>대상 도메인 내 페이지 자동 탐색 (링크 추적)</td></tr>
-            <tr><td>GET/POST 파라미터, 폼 필드, 쿠키 등 입력 지점 목록화</td></tr>
-            <tr><td>수집 결과를 구조화 데이터(JSON 등)로 저장, 다음 단계에 전달</td></tr>
-            <tr><td>인증 필요 페이지는 사전 설정된 세션으로만 접근 (허용 범위 내)</td></tr>
-          </table>
-        </section>
-
-        <section>
-          <h3>FR-02. LLM 기반 진단 도구 선택</h3>
-          <table class="req-table">
-            <tr><th>정의</th><td>수집된 입력 지점 특성을 LLM이 분석하여 SQLi/XSS 스캔 여부·방식을 판단·선택</td></tr>
-            <tr><th rowspan="3">세부 내용</th><td>파라미터 유형·응답 특성 등을 근거로 SQLi/XSS 각각의 스캔 필요 여부 판단</td></tr>
-            <tr><td>판단 근거를 로그로 기록 (사실과 추측 구분)</td></tr>
-            <tr><td>선택 결과에 따라 다음 단계의 페이로드 세트·강도 결정</td></tr>
-          </table>
-        </section>
-
-        <section>
-          <h3>FR-03. 자동화 도구 실행 (SQLi/XSS 스캔)</h3>
-          <table class="req-table">
-            <tr><th>정의</th><td>선택된 스캔 로직에 따라 SQLi/XSS 탐지용 자동화 도구를 실행, 원시 결과 수집</td></tr>
-            <tr><th rowspan="4">세부 내용</th><td>SQLi: 에러기반/블라인드(시간지연) 등 페이로드 주입 및 응답 비교</td></tr>
-            <tr><td>XSS: reflected/stored 여부 확인을 위한 페이로드 주입 및 반사 여부 확인</td></tr>
-            <tr><td>요청 속도 제한 등 운영 영향 최소화 옵션 적용</td></tr>
-            <tr><td>모든 요청·응답 원문 로깅</td></tr>
-          </table>
-        </section>
-
-        <section>
-          <h3>FR-04. LLM 판단 (취약점 확정 및 재실행)</h3>
-          <table class="req-table">
-            <tr><th>정의</th><td>자동화 도구의 원시 결과를 LLM이 분석해 오탐 여부 판단, 필요 시 재실행</td></tr>
-            <tr><th rowspan="3">세부 내용</th><td>응답 내 취약점 신호(에러 메시지, 반사된 페이로드 등) 해석</td></tr>
-            <tr><td>오탐 가능성 있는 경우 페이로드를 조정한 재현 요청을 자동 생성·재실행</td></tr>
-            <tr><td>확정(Confirmed) / 미확인(Unconfirmed) 상태와 판단 근거를 함께 기록</td></tr>
-          </table>
-        </section>
-
-        <section>
-          <h3>FR-05. 리포트 생성</h3>
-          <table class="req-table">
-            <tr><th>정의</th><td>확정된 취약점을 사람이 읽을 수 있는 보고서 형태로 산출</td></tr>
-            <tr><th rowspan="3">세부 내용</th><td>취약점 별 위치(URL/파라미터), 유형, 판단 근거, 재현 PoC(요청·응답) 명시</td></tr>
-            <tr><td>마크다운 또는 HTML 형태로 보고서 자동 생성</td></tr>
-            <tr><td>원본 요청·응답 로그를 첨부하여 재현성 확보</td></tr>
-          </table>
-        </section>
-      </section>
-
-      <!-- 3. 비기능 요구사항 -->
-      <section>
-        <h2>3. 비기능 요구사항 (NFR)</h2>
-        <table class="req-table">
-          <tr><th>NFR-01</th><td>비파괴적 검증 원칙 — 데이터 변조·삭제, 서비스 중단 유발 공격 금지</td></tr>
-          <tr><th>NFR-02</th><td>요청 속도 제한 (최소 200ms 간격, 동시 연결 1~2개 이내)</td></tr>
-          <tr><th>NFR-03</th><td>재현성 — 모든 요청·응답 원본을 로그로 저장</td></tr>
-          <tr><th>NFR-04</th><td>범위 제한 — 사전 승인된 대상 도메인 외 요청 금지</td></tr>
-        </table>
-      </section>
-
-      <!-- 전체 요구사항 정의서 링크 -->
-      <section>
-        <h2>전체 요구사항 정의서</h2>
-        <p>FR/NFR 세부 기능 분해를 포함한 전체 문서</p>
-        <p>
-          <a href="https://drive.google.com/file/d/1d5TdmXZKEjkR1PETlYS0JJQDzYla2OI8/view?usp=drive_link" target="_blank" rel="noopener">
-            요구사항 정의서
-          </a>
-        </p>
-      </section>
-
-      <!-- 마무리 -->
-      <section>
-        <h2>정리</h2>
-        <p>크롤링 → LLM 도구 선택 → 자동화 스캔 → LLM 판단 → 리포트</p>
-        <p><small>SQLi·XSS 2종에 한정된 최소 기능(MVP) 파이프라인으로 우선 구현</small></p>
-      </section>
-
-      <!-- 진행 상황 (주차보고) -->
-      <section>
-        <h2>진행 상황</h2>
+        <h2>진행사항</h2>
         <ul>
-          <li>아키텍처 설계 진행 중 — 모듈화 구조로 설계하여, SQLi·XSS 외 다른 취약점 유형도
-            추후 확장 가능하도록 구성</li>
-          <li>진단 도구 설치 완료 — SQLi: sqlmap, XSS: dalfox</li>
-          <li>프로토타입 구현 — LLM 연동 이전 단계로, 목업(mock) 로직으로 파이프라인을 구성해
-            기본 동작 테스트 진행 중</li>
+          <li>아키텍처 설계 및 프로토타입 개발 중</li>
+          <li>SQLMAP, DALFOX와 같은 취약점 자동화 진단 도구 설치</li>
+          <li>LLM을 뺀 목업(하드코딩) 상태로 간단한 웹페이지 테스트</li>
         </ul>
       </section>
 
-      <!-- 차주 계획 -->
+      <!-- 차주계획 -->
       <section>
-        <h2>차주 계획</h2>
+        <h2>차주계획</h2>
         <ul>
-          <li>단계 간 데이터 스키마 설계 — 크롤링 → 도구선택 → 스캔 → 판단 → 리포트 각 단계 입출력 JSON 정의</li>
-          <li>LLM 프롬프트/출력 포맷 설계 — 도구 선택(FR-02), 취약점 확정 판단(FR-04)에 쓸 구조화 출력 형식 확정</li>
-          <li>크롤러 도구 선정 및 PoC — 대상 사이트 페이지·입력 파라미터 수집 방식 검증</li>
+          <li>실제 기능이 있는 것 테스트</li>
+          <li>요구사항 정의서 자세히 작성</li>
+          <li>설계 문서들 작성</li>
         </ul>
       </section>
 
